@@ -1,4 +1,4 @@
-# SecureTrails API
+# WalkBase API
 
 A secure, scalable .NET Web API for managing walking trails, built with JWT-based authentication, authorization, and clean architecture principles.
 
