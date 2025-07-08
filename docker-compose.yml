@@ -1,0 +1,33 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: "YourStrong@Passw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - backend-network
+
+  backendapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backendapi
+    ports:
+      - "4000:8080"
+    depends_on:
+      - sqlserver
+    environment:
+      AuthConnectionString: "Server=sqlserver;Database=AuthDB;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;"
+      UserConnectionString: "Server=sqlserver;Database=UserAuthDB;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;"
+      Jwt__Key: "supersecretkey123"
+      Jwt__Issuer: "your-app"
+      Jwt__Audience: "your-app-users"
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge
